@@ -1,7 +1,7 @@
-// SilverGuard backend test suite. Run: node tests/run_tests.js
+// Esper backend test suite. Run: node tests/run_tests.js
 import { DemoClock } from '../engine/clock.js';
 import { analyzeNote } from '../engine/text.js';
-import { SilverGuardEngine } from '../engine/engine.js';
+import { EsperEngine } from '../engine/engine.js';
 import { generatePersonas, loadPersonas, applyDue } from '../engine/personas.js';
 import { loadPopulation } from '../engine/population.js';
 
@@ -20,7 +20,7 @@ const START = '2026-07-11T07:00:00Z';
 // Helper: a senior with `days` of steady history ending yesterday.
 function stableEngine({ days = 21, missedOffsets = [], moodFn = null, sleepFn = null, mealsFn = null, noteFn = null, timeFn = null } = {}) {
   const clock = new DemoClock(START);
-  const engine = new SilverGuardEngine({ clock });
+  const engine = new EsperEngine({ clock });
   engine.addSenior({
     id: 's1', name: 'Test Senior', buddy: 'Buddy B',
     emergencyContact: 'EC (555-0000)', enrolledAt: clock.dateStr(-days),
@@ -158,7 +158,7 @@ t('new bad news cannot improve any score (check-in-anchored recent window)', () 
 // ---------- enrollment fence ----------
 t('a senior enrolled today reads as brand new, not as a crisis', () => {
   const clock = new DemoClock('2026-07-11T10:00:00Z');
-  const engine = new SilverGuardEngine({ clock });
+  const engine = new EsperEngine({ clock });
   engine.addSenior({ id: 'judge', name: 'Judge Demo' });
   const a0 = engine.assess('judge');
   eq(a0.healthScore, 0, 'health'); eq(a0.isolationScore, 0, 'isolation');
@@ -174,7 +174,7 @@ t('a senior enrolled today reads as brand new, not as a crisis', () => {
 
 t('day-zero Tier 1 flag says 1 day silent with a safe buddy default', () => {
   const clock = new DemoClock('2026-07-11T15:00:00Z'); // past the 14:00 default deadline
-  const engine = new SilverGuardEngine({ clock });
+  const engine = new EsperEngine({ clock });
   engine.addSenior({ id: 'judge', name: 'Judge Demo' });
   engine.tick();
   const f = engine.activeFlag('judge');
@@ -295,7 +295,7 @@ t('persona generation is deterministic (same seed, identical data)', () => {
 });
 
 t('Dorothy reads as declining; Frank stable; Maria not declining', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const dorothy = engine.assess('dorothy');
   const frank = engine.assess('frank');
@@ -309,7 +309,7 @@ t('Dorothy reads as declining; Frank stable; Maria not declining', () => {
 });
 
 t('Maria non-alert is explained by the engine (upbeat notes)', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   engine.advanceTo('2026-07-11T12:00:00Z');
   const maria = engine.assess('maria');
@@ -317,7 +317,7 @@ t('Maria non-alert is explained by the engine (upbeat notes)', () => {
 });
 
 t('Dorothy gets a concrete outlook (days to concern zone or in zone)', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const a = engine.assess('dorothy');
   ok(a.outlook.inZone || (a.outlook.daysToConcern >= 1 && a.outlook.daysToConcern <= 14),
@@ -325,7 +325,7 @@ t('Dorothy gets a concrete outlook (days to concern zone or in zone)', () => {
 });
 
 t('Sam: silent past his deadline -> Tier 1 flag fires; others do not', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   engine.advanceTo('2026-07-11T11:45:00Z');
   ok(engine.activeFlag('sam'), 'sam should be flagged');
@@ -338,7 +338,7 @@ t('Sam: silent past his deadline -> Tier 1 flag fires; others do not', () => {
 });
 
 t('the simulated world continues: tomorrow does not flag the whole roster', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   loadPopulation(engine);
   engine.advanceTo('2026-07-12T12:00:00Z');
@@ -348,7 +348,7 @@ t('the simulated world continues: tomorrow does not flag the whole roster', () =
 });
 
 t("Dorothy's projection comes true when time advances", () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   engine.advanceTo('2026-07-14T18:00:00Z'); // three days later
   const a = engine.assess('dorothy');
@@ -357,7 +357,7 @@ t("Dorothy's projection comes true when time advances", () => {
 });
 
 t('outreach brief is structured AND built from the computed numbers', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const brief = engine.brief('dorothy');
   ok(brief.text.includes('Dorothy Alvarez'), 'names the senior');
@@ -370,7 +370,7 @@ t('outreach brief is structured AND built from the computed numbers', () => {
 });
 
 t('applyDue is idempotent', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   const { todaysPlan } = loadPersonas(engine);
   engine.clock.setTime('2026-07-11T12:00:00Z');
   applyDue(engine, todaysPlan);
@@ -381,7 +381,7 @@ t('applyDue is idempotent', () => {
 
 // ---------- advanced APIs ----------
 t('trajectory API: 28 chartable points, projection, both thresholds', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const traj = engine.trajectory('dorothy');
   eq(traj.points.length, 28, 'points');
@@ -392,7 +392,7 @@ t('trajectory API: 28 chartable points, projection, both thresholds', () => {
 });
 
 t('replay: Dorothy flagged days before today; Frank never; report says so', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const d = engine.replay('dorothy');
   ok(d.firstFlaggedDaysAgo >= 3, `dorothy lead time: ${d.firstFlaggedDaysAgo}`);
@@ -403,7 +403,7 @@ t('replay: Dorothy flagged days before today; Frank never; report says so', () =
 });
 
 t('assessAsOf answers "what did it say two weeks ago" without touching the clock', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const before = engine.clock.iso();
   const past = engine.assessAsOf('dorothy', '2026-06-27T12:00:00Z');
@@ -412,7 +412,7 @@ t('assessAsOf answers "what did it say two weeks ago" without touching the clock
 });
 
 t('what-if sandbox: better inputs, lower score, store untouched', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const real = engine.assess('dorothy');
   const edited = engine.checkinsFor('dorothy').map(c => ({ ...c, meals: 3, mood: 4, sleep: 4, note: '' }));
@@ -422,7 +422,7 @@ t('what-if sandbox: better inputs, lower score, store untouched', () => {
 });
 
 t('score components visibly sum to the displayed score', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const a = engine.assess('dorothy');
   const hSum = Object.values(a.components.health).reduce((s, p) => s + p.points, 0);
@@ -433,7 +433,7 @@ t('score components visibly sum to the displayed score', () => {
 });
 
 t('coordinator actions: assign visit, complete it, card reflects it', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   const v = engine.assignVisit('dorothy', { volunteer: 'Linda', reason: 'declining trend' });
   let card = engine.dashboard().find(c => c.senior.id === 'dorothy');
@@ -447,12 +447,12 @@ t('coordinator actions: assign visit, complete it, card reflects it', () => {
 });
 
 t('serialization: toJSON/fromJSON round-trips live state', () => {
-  const engine = new SilverGuardEngine({ clock: new DemoClock(START) });
+  const engine = new EsperEngine({ clock: new DemoClock(START) });
   loadPersonas(engine);
   engine.advanceTo('2026-07-11T11:45:00Z');
   engine.assignVisit('dorothy', { volunteer: 'Linda' });
   const snapshot = JSON.stringify(engine.toJSON());
-  const restored = SilverGuardEngine.fromJSON(JSON.parse(snapshot));
+  const restored = EsperEngine.fromJSON(JSON.parse(snapshot));
   eq(restored.clock.iso(), engine.clock.iso(), 'clock');
   eq(restored.store.checkins.length, engine.store.checkins.length, 'checkins');
   ok(restored.activeFlag('sam'), 'sam flag survives');

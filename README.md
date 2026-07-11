@@ -1,6 +1,6 @@
-# SilverGuard
+# Esper
 
-SilverGuard is an early-warning system for seniors who live alone. A senior completes a twenty-second daily check-in, and the system looks for missed check-ins and gradual changes in sleep, meals, mood, timing, and engagement. The goal is simple: catch the decline while it is still a phone call, before it becomes an ambulance.
+Esper is an early-warning system for seniors who live alone. A senior completes a twenty-second daily check-in, and the system looks for missed check-ins and gradual changes in sleep, meals, mood, timing, and engagement. The goal is simple: catch the decline while it is still a phone call, before it becomes an ambulance.
 
 ## How it works
 

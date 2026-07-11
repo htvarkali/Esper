@@ -4,7 +4,7 @@
 //    dashed path forward.
 // 2. replay(): re-runs the assessment as-of each past day using only the
 //    data that existed then. This converts simulated data into a live
-//    proof: "SilverGuard would have first flagged her N days ago."
+//    proof: "Esper would have first flagged her N days ago."
 //    No future data ever leaks into a past assessment.
 
 import { DemoClock, dateOf } from './clock.js';

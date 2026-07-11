@@ -8,11 +8,11 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "SilverGuard — Early Warning for Seniors Living Alone",
+  title: "Esper — Early Warning for Seniors Living Alone",
   description:
     "A twenty-second daily check-in helps senior centers catch quiet decline while it is still a phone call, before it becomes an ambulance.",
-  applicationName: "SilverGuard",
-  creator: "SilverGuard",
+  applicationName: "Esper",
+  creator: "Esper",
   icons: {
     icon: [
       {
