@@ -17,8 +17,8 @@ export interface Experience {
 export const experiences: Experience[] = [
   {
     id: "1",
-    title: "Amazon Rainforest Conservation",
-    company: "Brazil Initiative",
+    title: "Daily senior check-in",
+    company: "20-second routine",
     location: {
       city: "Manaus",
       country: "Brazil",
@@ -32,8 +32,8 @@ export const experiences: Experience[] = [
   },
   {
     id: "2",
-    title: "Congo Basin Protection",
-    company: "Central Africa Program",
+    title: "Personal deadline passes",
+    company: "Tier 1 hard rule",
     location: {
       city: "Kinshasa",
       country: "DRC",
@@ -47,8 +47,8 @@ export const experiences: Experience[] = [
   },
   {
     id: "3",
-    title: "Borneo Forest Monitoring",
-    company: "Southeast Asia Project",
+    title: "Neighborhood buddy knock",
+    company: "Low-cost human response",
     location: {
       city: "Kuching",
       country: "Malaysia",
@@ -62,8 +62,8 @@ export const experiences: Experience[] = [
   },
   {
     id: "4",
-    title: "Taiga Forest Protection",
-    company: "Northern Forests Initiative",
+    title: "Coordinator review",
+    company: "Ranked early-warning dashboard",
     location: {
       city: "Yakutsk",
       country: "Russia",
@@ -77,8 +77,8 @@ export const experiences: Experience[] = [
   },
   {
     id: "5",
-    title: "Pacific Northwest Conservation",
-    company: "North America Program",
+    title: "Emergency contact",
+    company: "Last step in the ladder",
     location: {
       city: "Vancouver",
       country: "Canada",

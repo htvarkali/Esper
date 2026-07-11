@@ -50,7 +50,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   )
 }
 
-export default function TerraPage() {
+export default function SilverGuardPage() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
@@ -59,14 +59,12 @@ export default function TerraPage() {
   const [autoRotationKey, setAutoRotationKey] = useState(0)
   const [dynamicWordIndex, setDynamicWordIndex] = useState(0)
   const [wordFade, setWordFade] = useState(true)
-  const [dashboardScrollOffset, setDashboardScrollOffset] = useState(0)
   const [selectedExperience, setSelectedExperience] = useState<Experience | null>(null)
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
-  const dashboardRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
   const observerRef = useRef<IntersectionObserver>(null)
 
-  const dynamicWords = ["forests", "nature", "animals", "ecosystems", "biodiversity", "wildlife", "habitats"]
+  const dynamicWords = ["decline", "silence", "risk", "drift", "warning signs", "the bad day", "the bad month"]
 
   useEffect(() => {
     const wordInterval = setInterval(() => {
@@ -83,26 +81,6 @@ export default function TerraPage() {
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY)
-
-      if (dashboardRef.current) {
-        const dashboardRect = dashboardRef.current.getBoundingClientRect()
-        const viewportHeight = window.innerHeight
-
-        const rotationStart = viewportHeight * 0.8
-        const rotationEnd = viewportHeight * 0.2
-
-        if (dashboardRect.top >= rotationStart) {
-          setDashboardScrollOffset(0)
-        } else if (dashboardRect.top <= rotationEnd) {
-          setDashboardScrollOffset(15)
-        } else {
-          const scrollRange = rotationStart - rotationEnd
-          const currentProgress = rotationStart - dashboardRect.top
-          const rotationProgress = currentProgress / scrollRange
-          const tiltAngle = rotationProgress * 15
-          setDashboardScrollOffset(tiltAngle)
-        }
-      }
     }
 
     handleScroll()
@@ -161,7 +139,7 @@ export default function TerraPage() {
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="text-lg md:text-xl font-semibold font-mono hover:text-pink-400 transition-colors duration-300"
             >
-              TERRA
+              SILVERGUARD
             </button>
 
             <nav className="hidden md:flex items-center gap-8">
@@ -169,19 +147,19 @@ export default function TerraPage() {
                 onClick={() => scrollToSection("metrics")}
                 className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors duration-300"
               >
-                Impact
+                Why it matters
               </button>
               <button
                 onClick={() => scrollToSection("map")}
                 className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors duration-300"
               >
-                Projects
+                Pilot
               </button>
               <button
                 onClick={() => scrollToSection("narrative")}
                 className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors duration-300"
               >
-                Technology
+                How it works
               </button>
               <button
                 onClick={() => scrollToSection("faq")}
@@ -193,7 +171,7 @@ export default function TerraPage() {
                 onClick={() => scrollToSection("cta")}
                 className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors duration-300"
               >
-                Join us
+                Start a pilot
               </button>
             </nav>
 
@@ -215,19 +193,19 @@ export default function TerraPage() {
               onClick={() => scrollToSection("metrics")}
               className="font-serif text-5xl md:text-7xl font-light text-[#F2F3F5] hover:text-pink-400 transition-colors duration-300"
             >
-              Impact
+              Why it matters
             </button>
             <button
               onClick={() => scrollToSection("map")}
               className="font-serif text-5xl md:text-7xl font-light text-[#F2F3F5] hover:text-pink-400 transition-colors duration-300"
             >
-              Projects
+              Pilot
             </button>
             <button
               onClick={() => scrollToSection("narrative")}
               className="font-serif text-5xl md:text-7xl font-light text-[#F2F3F5] hover:text-pink-400 transition-colors duration-300"
             >
-              Technology
+              How it works
             </button>
             <button
               onClick={() => scrollToSection("faq")}
@@ -239,7 +217,7 @@ export default function TerraPage() {
               onClick={() => scrollToSection("cta")}
               className="font-serif text-5xl md:text-7xl font-light text-[#F2F3F5] hover:text-pink-400 transition-colors duration-300"
             >
-              Join us
+              Start a pilot
             </button>
           </div>
         </div>
@@ -280,51 +258,33 @@ export default function TerraPage() {
                   wordFade ? "opacity-100 blur-0" : "opacity-0 blur-lg"
                 }`}
               >
-                Protect <AnimatedText key={dynamicWordIndex} text={dynamicWords[dynamicWordIndex]} delay={0} />
+                Catch <AnimatedText key={dynamicWordIndex} text={dynamicWords[dynamicWordIndex]} delay={0} />
               </span>
               <span className="block stagger-reveal text-7xl font-light md:text-8xl" style={{ animationDelay: "90ms" }}>
-                at scale
+                before crisis
               </span>
             </h1>
             <p
               className="text-[#A7ABB3] text-base md:text-lg max-w-[520px] mx-auto mb-8 leading-relaxed stagger-reveal text-white"
               style={{ animationDelay: "180ms" }}
             >
-              Real-time forest monitoring with AI. Detect threats, track biodiversity, preserve nature for future
-              generations.
+              A twenty-second daily check-in reveals the slow changes nobody can see day to day—and turns silence into
+              a same-day human response.
             </p>
             <div className="stagger-reveal" style={{ animationDelay: "270ms" }}>
               <Button className="glass-button px-8 py-6 text-base rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 text-white">
-                Start Protecting
+                Start a Pilot
               </Button>
             </div>
           </div>
 
-          <div className="mt-12 md:mt-20 stagger-reveal" style={{ animationDelay: "360ms" }} ref={dashboardRef}>
-            <div style={{ perspective: "1200px" }}>
-              <div
-                className="relative aspect-[16/10] md:aspect-[16/9] rounded-[24px] overflow-hidden"
-                style={{
-                  transform: `rotateX(${dashboardScrollOffset}deg)`,
-                  transformStyle: "preserve-3d",
-                  transition: "transform 0.05s linear",
-                }}
-              >
-                <img
-                  src="/dashboard-screenshot.png"
-                  alt="Acme Inc. Analytics Dashboard"
-                  className="object-cover dashboard-image w-full h-auto"
-                />
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
       <section className="relative py-12 border-y border-white/5 bg-[#0B0C0F] overflow-hidden md:py-8 md:pt-8 md:pb-4">
         <div className="w-full">
           <p className="text-center text-xs md:text-sm uppercase tracking-[0.2em] text-[#A7ABB3] mb-8">
-            Trusted by leading conservation organizations
+            Built for senior centers, neighborhood buddies, and the people they protect
           </p>
           <div className="logo-marquee">
             <div className="logo-marquee-content">
@@ -362,7 +322,7 @@ export default function TerraPage() {
       <section id="metrics" className="relative py-20 md:py-32 px-4 animate-on-scroll md:pt-24 md:pb-20">
         <div className="max-w-[1120px] w-full mx-auto">
           <h2 className="font-serif text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 md:mb-8 text-center text-balance">
-            Conservation{" "}
+            Early warning{" "}
             <span
               className="inline-block"
               style={{
@@ -372,21 +332,21 @@ export default function TerraPage() {
                 backgroundClip: "text",
               }}
             >
-              Impact
+              at human scale
             </span>{" "}
-            at Scale
+            before crisis
           </h2>
 
           <p className="text-[#A7ABB3] text-sm md:text-base mb-12 md:mb-16 text-center max-w-[600px] mx-auto leading-relaxed">
-            Trusted by conservation organizations worldwide. Powered by nature-first technology.
+            Catch the decline while it is still a phone call, before it becomes an ambulance.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-[800px] mx-auto">
             {[
-              { label: "FORESTS PROTECTED", value: "2.4M", desc: "hectares globally", color: "pink" },
-              { label: "SPECIES MONITORED", value: "12K+", desc: "wildlife species", color: "purple" },
-              { label: "CARBON SEQUESTERED", value: "18M", desc: "tons CO2", color: "pink" },
-              { label: "THREAT DETECTION", value: "99.4%", desc: "accuracy rate", color: "purple" },
+              { label: "DAILY CHECK-IN", value: "20s", desc: "one screen, once a day", color: "pink" },
+              { label: "EARLY-WARNING TIERS", value: "2", desc: "the bad day and the bad month", color: "purple" },
+              { label: "SAN RAMON SENIORS", value: "9K", desc: "roughly one in nine residents", color: "pink" },
+              { label: "YEARLY FALL RISK", value: "25%+", desc: "more than one in four adults 65+", color: "purple" },
             ].map((metric, i) => (
               <div
                 key={i}
@@ -414,13 +374,13 @@ export default function TerraPage() {
         <div className="text-center mb-12 md:mb-16 px-4">
           <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center justify-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-            GLOBAL REACH
+            PILOT READY
           </div>
           <h2 className="font-serif text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 text-balance">
-            Conservation Projects Worldwide
+            One coordinator. Twenty consenting seniors.
           </h2>
           <p className="text-[#A7ABB3] text-sm md:text-base max-w-[600px] mx-auto leading-relaxed">
-            Monitoring and protecting critical forest ecosystems across five continents
+            Each senior names their own buddy and emergency contacts. Their data stays local at the senior center.
           </p>
         </div>
 
@@ -437,10 +397,10 @@ export default function TerraPage() {
             <div className="max-w-[720px]">
               <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-                CONSERVATION TECHNOLOGY
+                TWO-TIER EARLY WARNING
               </div>
               <h2 className="font-serif text-[36px] leading-[1.15] md:text-[56px] md:leading-[1.1] font-medium mb-8 text-balance">
-                Every forest ecosystem{" "}
+                The numbers decide. The language layer{" "}
                 <span
                   className="inline-block"
                   style={{
@@ -450,12 +410,12 @@ export default function TerraPage() {
                     backgroundClip: "text",
                   }}
                 >
-                  matters
+                  only explains
                 </span>
               </h2>
               <p className="text-[#A7ABB3] text-base md:text-lg leading-relaxed mb-12">
-                Our satellite and AI technology monitors biodiversity, detects illegal logging, tracks deforestation
-                patterns, and alerts teams in real-time. Preservation at the speed of nature demands.
+                Detection is deterministic, traceable math. AI enters only after someone is flagged, drafting a clear
+                outreach brief while the coordinator stays in control.
               </p>
 
               <div className="md:hidden mb-8">
@@ -480,26 +440,26 @@ export default function TerraPage() {
               <div className="space-y-6">
                 {[
                   {
-                    title: "Drone Surveys",
-                    desc: "Aerial surveys to catalog wildlife and species diversity",
+                    title: "Twenty-second check-in",
+                    desc: "One big “I’m okay” button, three taps, and one optional note",
                     icon: CustomDroneIcon,
                     image: "/drone.png",
                   },
                   {
-                    title: "Real-time Monitoring",
-                    desc: "24/7 satellite surveillance with instant alerts",
+                    title: "Tier 1: catch the bad day",
+                    desc: "A missed personal deadline triggers a same-day buddy knock",
                     icon: Satellite,
                     image: "/real-time-satellite.png",
                   },
                   {
-                    title: "Biodiversity Tracking",
-                    desc: "Map and monitor wildlife populations across regions",
+                    title: "Tier 2: catch the bad month",
+                    desc: "Health and isolation scores compare each person only to their own baseline",
                     icon: PawPrint,
                     image: "/biodiversity-tracking.png",
                   },
                   {
-                    title: "Deforestation Prevention",
-                    desc: "Detect threats before they escalate",
+                    title: "Coordinator outreach brief",
+                    desc: "Plain-English reasons, confidence, suggested action, and one-click help",
                     icon: Trees,
                     image: "/deforestation-detect.png",
                   },
@@ -541,19 +501,19 @@ export default function TerraPage() {
               <div className="relative w-full h-full min-h-[500px]">
                 {[
                   {
-                    title: "Drone Surveys",
+                    title: "Twenty-second check-in",
                     image: "/drone.png",
                   },
                   {
-                    title: "Real-time Monitoring",
+                    title: "Tier 1: catch the bad day",
                     image: "/real-time-satellite.png",
                   },
                   {
-                    title: "Biodiversity Tracking",
+                    title: "Tier 2: catch the bad month",
                     image: "/biodiversity-tracking.png",
                   },
                   {
-                    title: "Deforestation Prevention",
+                    title: "Coordinator outreach brief",
                     image: "/deforestation-detect.png",
                   },
                 ].map((feature, i) => {
@@ -607,41 +567,41 @@ export default function TerraPage() {
               ?
             </h2>
             <p className="text-[#A7ABB3] text-sm md:text-base max-w-[600px] mx-auto leading-relaxed">
-              Everything you need to know about TERRA and our conservation technology platform.
+              Straight answers about participation, false alarms, privacy, evidence, and where AI belongs.
             </p>
           </div>
 
           <div className="space-y-4">
             {[
               {
-                question: "How does TERRA's satellite monitoring work?",
+                question: "What happens if a senior misses a check-in?",
                 answer:
-                  "Our platform uses a network of satellites combined with AI algorithms to analyze forest coverage in real-time. We detect changes as small as 0.5 hectares within 24 hours, allowing for rapid response to threats like illegal logging or forest fires.",
+                  "Silence itself is the trigger. After the senior's personal deadline and grace window pass, their pre-assigned neighborhood buddy is asked to knock. If it is not resolved, the alert escalates to the coordinator and only then to the emergency contact.",
               },
               {
-                question: "What regions does TERRA currently cover?",
+                question: "Won't missed taps create too many false alarms?",
                 answer:
-                  "TERRA currently monitors over 2.4 million hectares across five continents, including the Amazon rainforest, Congo Basin, Borneo, Russian Taiga, and Pacific Northwest. We're continuously expanding our coverage to protect more critical ecosystems.",
+                  "A missed tap is ambiguous, so the first response is deliberately cheap and human: a neighbor's knock, never an ambulance. If the senior checks in late, the flag clears itself, and each person can have only one active flag at a time.",
               },
               {
-                question: "How accurate is the threat detection system?",
+                question: "Does AI decide who is at risk?",
                 answer:
-                  "Our AI-powered threat detection achieves a 99.4% accuracy rate. We use machine learning models trained on millions of satellite images to distinguish between natural changes and human-caused deforestation or illegal activities.",
+                  "No. Detection is a calculator: deterministic math produces the same traceable answer every time. AI is used only after the math flags someone, to draft the coordinator's outreach summary and talking points.",
               },
               {
-                question: "Can organizations integrate TERRA with their existing systems?",
+                question: "What does the trend engine measure?",
                 answer:
-                  "Yes, TERRA offers a comprehensive API that allows seamless integration with existing conservation management systems, GIS platforms, and alert systems. Our documentation provides detailed guides for implementation.",
+                  "Two transparent scores only. Health reads sleep, meals, and health-related note language. Isolation reads response timing, message length, and mood. Both compare recent behavior with a lagging personal baseline so slow decline cannot redefine itself as normal.",
               },
               {
-                question: "What is the pricing model for TERRA?",
+                question: "Are mood taps and late check-ins proven predictors?",
                 answer:
-                  "We offer tiered pricing based on coverage area and feature requirements. Non-profit conservation organizations may qualify for discounted rates or grants. Contact our team for a customized quote based on your needs.",
+                  "Not yet. SilverGuard treats that as a testable hypothesis, not a medical claim. A small senior-center pilot is designed to measure daily participation first, then test whether these signals provide useful early warning.",
               },
               {
-                question: "How can I contribute to forest conservation through TERRA?",
+                question: "How does SilverGuard protect privacy?",
                 answer:
-                  "There are several ways to contribute: donate to support monitoring of unprotected regions, volunteer for on-ground verification teams, or partner with us as a corporate sponsor. Every contribution helps protect critical ecosystems.",
+                  "Enrollment is consent-based. Every senior personally chooses their buddy and emergency contacts, and all check-in data stays local at the senior center rather than being sent to a cloud service.",
               },
             ].map((faq, i) => (
               <div
@@ -686,18 +646,18 @@ export default function TerraPage() {
         <div className="max-w-[800px] w-full mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 glass-pill px-4 py-2 rounded-full mb-8 text-xs md:text-sm text-[#A7ABB3]">
             <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-            Save the world
+            START SMALL. RESPOND EARLY.
           </div>
 
           <h2 className="font-serif text-[40px] leading-[1.15] md:text-[64px] md:leading-[1.1] font-medium mb-6 text-balance">
-            Join the global conservation movement
+            Catch the decline before the ambulance
           </h2>
           <p className="text-[#A7ABB3] text-base md:text-lg mb-10 leading-relaxed max-w-[560px] mx-auto">
-            Together, we're building a sustainable future. Start protecting forests today.
+            One coordinator, one signup sheet, and twenty seniors are enough to begin a real-world pilot in a week.
           </p>
 
           <Button className="glass-button text-base rounded-full bg-white/5 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 text-white px-8 py-6 md:text-base">
-            Get Started Today
+            Start a Senior-Center Pilot
           </Button>
         </div>
       </section>
@@ -707,9 +667,9 @@ export default function TerraPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-12">
             {/* Brand Column */}
             <div className="flex flex-col gap-4">
-              <div className="text-lg font-semibold font-mono">TERRA</div>
+              <div className="text-lg font-semibold font-mono">SILVERGUARD</div>
               <p className="text-xs text-[#A7ABB3] leading-relaxed">
-                Protecting global forests through real-time monitoring and AI technology.
+                Catching quiet decline while it is still a phone call, before it becomes an ambulance.
               </p>
               <div className="flex items-center gap-4 mt-2">
                 <a
@@ -749,16 +709,16 @@ export default function TerraPage() {
               <div className="text-xs uppercase tracking-[0.15em] text-[#F2F3F5] font-semibold mb-2">Product</div>
               <div className="flex flex-col gap-3">
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  Features
+                  Daily check-in
                 </a>
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  Pricing
+                  Tier 1
                 </a>
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  Documentation
+                  Tier 2
                 </a>
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  API
+                  Coordinator view
                 </a>
               </div>
             </div>
@@ -768,24 +728,24 @@ export default function TerraPage() {
               <div className="text-xs uppercase tracking-[0.15em] text-[#F2F3F5] font-semibold mb-2">Company</div>
               <div className="flex flex-col gap-3">
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  About
+                  Why SilverGuard
                 </a>
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  Blog
+                  Pilot plan
                 </a>
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  Careers
+                  Privacy
                 </a>
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  Contact
+                  Contact us
                 </a>
               </div>
             </div>
 
             {/* Newsletter Subscription */}
             <div className="flex flex-col gap-4">
-              <div className="text-xs uppercase tracking-[0.15em] text-[#F2F3F5] font-semibold mb-2">Newsletter</div>
-              <p className="text-xs text-[#A7ABB3] mb-3">Get updates on forest conservation insights.</p>
+              <div className="text-xs uppercase tracking-[0.15em] text-[#F2F3F5] font-semibold mb-2">Pilot updates</div>
+              <p className="text-xs text-[#A7ABB3] mb-3">Follow the senior-center pilot and what it teaches us.</p>
               <div className="flex flex-col gap-2">
                 <input
                   type="email"
@@ -801,7 +761,7 @@ export default function TerraPage() {
 
           {/* Footer Bottom */}
           <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#A7ABB3]">
-            <div>© 2025 TERRA. All rights reserved.</div>
+            <div>© 2026 SilverGuard. All rights reserved.</div>
             <div className="flex gap-6">
               <a href="#" className="hover:text-[#F2F3F5] transition-colors">
                 Privacy Policy
