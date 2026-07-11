@@ -5,10 +5,26 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Real Supabase when .env.local provides keys; demo fallback otherwise so the
-// flow works offline at the event.
-export const supabase: SupabaseClient | null =
-  supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+// Real Supabase when .env.local provides plausible keys; demo fallback
+// otherwise so the flow works offline at the event. Malformed values fall
+// back to demo mode instead of crashing client creation.
+function buildClient(): SupabaseClient | null {
+  if (!supabaseUrl || !supabaseKey) return null;
+  const urlOk = /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(supabaseUrl.trim());
+  const keyOk = /^(eyJ|sb_publishable_)/.test(supabaseKey.trim());
+  if (!urlOk || !keyOk) {
+    console.warn("Supabase env values look invalid, staying in demo mode.");
+    return null;
+  }
+  try {
+    return createClient(supabaseUrl.trim(), supabaseKey.trim());
+  } catch {
+    console.warn("Supabase client creation failed, staying in demo mode.");
+    return null;
+  }
+}
+
+export const supabase: SupabaseClient | null = buildClient();
 
 export const isSupabaseConfigured = supabase !== null;
 
