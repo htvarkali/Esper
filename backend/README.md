@@ -1,6 +1,6 @@
-# SilverGuard Backend
+# Esper Backend
 
-The complete SilverGuard engine: Tier 1 (deterministic missed-check-in rule with
+The complete Esper engine: Tier 1 (deterministic missed-check-in rule with
 buddy escalation) plus Tier 2 (trend engine scoring each senior against their own
 lagging baseline), with chart/replay/validation APIs, coordinator actions, and
 serialization. Zero dependencies, framework-free ES modules, fully offline. Node 18+.
@@ -16,12 +16,12 @@ Plain ES modules; a Vite/React app imports them directly. No server, no network.
 
 ```js
 import { DemoClock } from './engine/clock.js';
-import { SilverGuardEngine } from './engine/engine.js';
+import { EsperEngine } from './engine/engine.js';
 import { loadPersonas } from './engine/personas.js';
 import { loadPopulation } from './engine/population.js';
 
 const clock = new DemoClock('2026-07-11T07:00:00Z');
-const engine = new SilverGuardEngine({ clock });
+const engine = new EsperEngine({ clock });
 loadPersonas(engine);     // Dorothy/Frank/Maria/Sam + 15 days of scripted future
 loadPopulation(engine);   // 8 background seniors -> 12-senior dashboard
 
@@ -41,7 +41,7 @@ engine.addCheckin({ seniorId, at, sleep, meals, mood, note }); // strict-validat
 engine.addSenior({ id, name, buddy, emergencyContact });       // live enrollment: enrolledAt + safe defaults auto-set
 engine.resolveFlag(flagId, 'buddy_confirmed_ok');  // holds for the rest of the day
 engine.assignVisit(id, { volunteer }); engine.logContact(id, { how }); engine.completeVisit(actionId, note);
-engine.toJSON(); SilverGuardEngine.fromJSON(data); // refresh-safe persistence
+engine.toJSON(); EsperEngine.fromJSON(data); // refresh-safe persistence
 ```
 
 ### Dashboard card shape
@@ -97,7 +97,7 @@ engine/trajectory.js  chart series + projection; day-by-day replay (no future le
 engine/validation.js  whole-roster replay report
 engine/brief.js       structured response-agent brief + suggestedAction
 engine/actions.js     coordinator action ledger (visits, contacts, last-contact)
-engine/engine.js      SilverGuardEngine facade (incl. advanceTo, toJSON/fromJSON)
+engine/engine.js      EsperEngine facade (incl. advanceTo, toJSON/fromJSON)
 engine/personas.js    4 core simulated seniors + scripted future + applyDue
 engine/population.js  8 background seniors for a deployment-scale dashboard
 tests/run_tests.js    41 tests; every audited failure mode is pinned

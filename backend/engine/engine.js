@@ -15,9 +15,9 @@ import { analyzeNote } from './text.js';
 
 export { analyzeNote };
 
-export class SilverGuardEngine {
+export class EsperEngine {
   constructor({ clock, tier1Config = TIER1_CONFIG, scoringConfig = SCORING_CONFIG }) {
-    if (!clock) throw new Error('SilverGuardEngine needs a clock');
+    if (!clock) throw new Error('EsperEngine needs a clock');
     this.clock = clock;
     this.tier1Config = tier1Config;
     this.scoringConfig = scoringConfig;
@@ -205,7 +205,7 @@ export class SilverGuardEngine {
 
   static fromJSON(data) {
     const clock = new DemoClock(data.clock);
-    const engine = new SilverGuardEngine({ clock });
+    const engine = new EsperEngine({ clock });
     engine.store.seniors = data.seniors ?? [];
     engine.store.checkins = data.checkins ?? [];
     engine.flagManager.flags = data.flags ?? [];

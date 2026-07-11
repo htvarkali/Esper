@@ -1,15 +1,15 @@
-// End-to-end CLI demo of the SilverGuard backend. Run: node demo.js
+// End-to-end CLI demo of the Esper backend. Run: node demo.js
 // Mirrors the stage arc: Tier 1 fires live, the trend engine catches
 // Dorothy's month, the replay proves the lead time, the agent drafts the
 // brief, and three days later the projection visibly comes true.
 
 import { DemoClock } from './engine/clock.js';
-import { SilverGuardEngine } from './engine/engine.js';
+import { EsperEngine } from './engine/engine.js';
 import { loadPersonas } from './engine/personas.js';
 import { loadPopulation } from './engine/population.js';
 
 const clock = new DemoClock('2026-07-11T07:00:00Z');
-const engine = new SilverGuardEngine({ clock });
+const engine = new EsperEngine({ clock });
 loadPersonas(engine);
 loadPopulation(engine); // 12 seniors total: a deployment, not a toy
 
@@ -73,7 +73,7 @@ console.log(`chart data: ${traj.points.filter(p => p.present).length} plotted da
 
 step('the replay proof - answer to "your data is simulated"');
 const rp = engine.replay('dorothy');
-console.log(`Re-run day by day with only the data that existed then: SilverGuard would have`);
+console.log(`Re-run day by day with only the data that existed then: Esper would have`);
 console.log(`first flagged Dorothy on ${rp.firstFlaggedDate}, ${rp.firstFlaggedDaysAgo} days before today.`);
 console.log(engine.validationReport().summary);
 

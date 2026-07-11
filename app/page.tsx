@@ -50,7 +50,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   )
 }
 
-export default function SilverGuardPage() {
+export default function EsperPage() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
@@ -139,7 +139,7 @@ export default function SilverGuardPage() {
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="text-lg md:text-xl font-semibold font-mono hover:text-pink-400 transition-colors duration-300"
             >
-              SILVERGUARD
+              ESPER
             </button>
 
             <nav className="hidden md:flex items-center gap-8">
@@ -596,10 +596,10 @@ export default function SilverGuardPage() {
               {
                 question: "Are mood taps and late check-ins proven predictors?",
                 answer:
-                  "Not yet. SilverGuard treats that as a testable hypothesis, not a medical claim. A small senior-center pilot is designed to measure daily participation first, then test whether these signals provide useful early warning.",
+                  "Not yet. Esper treats that as a testable hypothesis, not a medical claim. A small senior-center pilot is designed to measure daily participation first, then test whether these signals provide useful early warning.",
               },
               {
-                question: "How does SilverGuard protect privacy?",
+                question: "How does Esper protect privacy?",
                 answer:
                   "Enrollment is consent-based. Every senior personally chooses their buddy and emergency contacts, and all check-in data stays local at the senior center rather than being sent to a cloud service.",
               },
@@ -667,7 +667,7 @@ export default function SilverGuardPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-12">
             {/* Brand Column */}
             <div className="flex flex-col gap-4">
-              <div className="text-lg font-semibold font-mono">SILVERGUARD</div>
+              <div className="text-lg font-semibold font-mono">ESPER</div>
               <p className="text-xs text-[#A7ABB3] leading-relaxed">
                 Catching quiet decline while it is still a phone call, before it becomes an ambulance.
               </p>
@@ -728,7 +728,7 @@ export default function SilverGuardPage() {
               <div className="text-xs uppercase tracking-[0.15em] text-[#F2F3F5] font-semibold mb-2">Company</div>
               <div className="flex flex-col gap-3">
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
-                  Why SilverGuard
+                  Why Esper
                 </a>
                 <a href="#" className="text-sm text-[#A7ABB3] hover:text-[#F2F3F5] transition-colors">
                   Pilot plan
@@ -761,7 +761,7 @@ export default function SilverGuardPage() {
 
           {/* Footer Bottom */}
           <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#A7ABB3]">
-            <div>© 2026 SilverGuard. All rights reserved.</div>
+            <div>© 2026 Esper. All rights reserved.</div>
             <div className="flex gap-6">
               <a href="#" className="hover:text-[#F2F3F5] transition-colors">
                 Privacy Policy

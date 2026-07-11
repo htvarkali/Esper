@@ -1,9 +1,9 @@
 {
-  "name": "silverguard-backend",
+  "name": "esper-backend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "SilverGuard engine: deterministic senior early-warning scoring (Tier 1 missed check-in rule + Tier 2 trend engine). Zero dependencies, framework-free, fully offline.",
+  "description": "Esper engine: deterministic senior early-warning scoring (Tier 1 missed check-in rule + Tier 2 trend engine). Zero dependencies, framework-free, fully offline.",
   "scripts": {
     "test": "node tests/run_tests.js",
     "demo": "node demo.js"
