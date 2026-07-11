@@ -3,13 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  signInWithPassword,
-  signInWithGoogle,
-  isSupabaseConfigured,
-  DEMO_EMAIL,
-  DEMO_PASSWORD,
-} from "@/lib/auth";
+import { signInWithPassword, signInWithGoogle } from "@/lib/auth";
+import { getPatientByCode } from "./data/patients";
 
 const STEPS = [
   "Enter your 4-character code",
@@ -23,6 +18,18 @@ export default function Landing() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState<string | null>(null);
+
+  const startCheckin = (event: React.FormEvent) => {
+    event.preventDefault();
+    const patient = getPatientByCode(code);
+    if (!patient) {
+      setCodeError("Code not found. Please check it and try again.");
+      return;
+    }
+    router.push(`/checkin?code=${code.trim().toUpperCase()}`);
+  };
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -58,7 +65,7 @@ export default function Landing() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-violet-500/80 via-purple-700/80 to-purple-950/95" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/70 via-green-700/70 to-emerald-950/85" />
 
         <div className="relative z-10 h-full flex flex-col items-center justify-center gap-8 px-8 py-16 text-center">
           <p className="font-mono uppercase tracking-[0.35em] text-white/90 text-lg">Esper</p>
@@ -77,7 +84,7 @@ export default function Landing() {
                   index === 0 ? "bg-white/20" : "bg-white/10"
                 }`}
               >
-                <span className="w-9 h-9 shrink-0 rounded-full bg-white text-purple-900 font-bold flex items-center justify-center">
+                <span className="w-9 h-9 shrink-0 rounded-full bg-white text-emerald-900 font-bold flex items-center justify-center">
                   {index + 1}
                 </span>
                 <span className="text-lg font-medium">{step}</span>
@@ -85,12 +92,30 @@ export default function Landing() {
             ))}
           </div>
 
-          <Link
-            href="/checkin"
-            className="bg-white text-purple-950 text-xl font-bold rounded-2xl px-12 py-4 hover:bg-purple-100 transition-colors"
-          >
-            Start check-in →
-          </Link>
+          <form onSubmit={startCheckin} className="w-full max-w-md space-y-3">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <input
+                value={code}
+                onChange={(e) => {
+                  setCode(e.target.value.toUpperCase().slice(0, 4));
+                  setCodeError(null);
+                }}
+                maxLength={4}
+                autoComplete="off"
+                aria-label="Your 4-character code"
+                placeholder="CODE"
+                className="w-full sm:w-44 text-center text-2xl font-mono font-bold tracking-[0.3em] uppercase bg-white/95 text-emerald-950 rounded-2xl px-4 py-4 outline-none placeholder:text-emerald-900/40 focus:ring-4 focus:ring-white/40"
+              />
+              <button
+                type="submit"
+                disabled={code.length !== 4}
+                className="bg-white text-emerald-950 text-xl font-bold rounded-2xl px-10 py-4 hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                Start check-in →
+              </button>
+            </div>
+            {codeError && <p className="text-amber-200 text-base">{codeError}</p>}
+          </form>
         </div>
       </section>
 
@@ -127,7 +152,7 @@ export default function Landing() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={DEMO_EMAIL}
+              placeholder="Email address"
               aria-label="Email"
               className="w-full bg-neutral-900/70 border border-neutral-800 focus:border-neutral-500 rounded-xl px-4 py-3.5 outline-none placeholder:text-neutral-500"
             />
@@ -149,14 +174,6 @@ export default function Landing() {
               {busy ? "Signing in..." : "Sign In"}
             </button>
           </form>
-
-          {!isSupabaseConfigured && (
-            <p className="text-sm text-neutral-500 leading-relaxed">
-              Demo mode: <span className="text-neutral-300">{DEMO_EMAIL}</span> /{" "}
-              <span className="text-neutral-300">{DEMO_PASSWORD}</span>. Add Supabase keys to
-              .env.local for real email and Google auth.
-            </p>
-          )}
 
           <p className="text-neutral-400 text-sm text-center">
             Checking in as a senior?{" "}

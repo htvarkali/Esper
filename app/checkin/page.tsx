@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getPatientByCode, type Patient } from "../data/patients";
 
@@ -67,6 +67,18 @@ export default function CheckinPage() {
   const [note, setNote] = useState("");
 
   const firstName = patient?.name.split(" ")[0] ?? "";
+
+  // Arriving from the landing page with ?code=XXXX skips the code screen.
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("code");
+    if (!fromUrl) return;
+    const match = getPatientByCode(fromUrl);
+    if (match) {
+      setCode(fromUrl.toUpperCase());
+      setPatient(match);
+      setStep(0);
+    }
+  }, []);
 
   const submitCode = (event: React.FormEvent) => {
     event.preventDefault();
