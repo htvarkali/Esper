@@ -41,7 +41,8 @@ export default function LoginPage() {
   const google = async () => {
     setError(null);
     try {
-      await signInWithGoogle();
+      const handledLocally = await signInWithGoogle();
+      if (handledLocally) router.push("/globe");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Google sign-in failed");
     }

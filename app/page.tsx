@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signInWithPassword, signUpWithPassword, signInWithGoogle } from "@/lib/auth";
 import { getPatientByCode } from "./data/patients";
@@ -60,7 +59,8 @@ export default function Landing() {
   const google = async () => {
     setError(null);
     try {
-      await signInWithGoogle();
+      const handledLocally = await signInWithGoogle();
+      if (handledLocally) router.push("/globe");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Google sign-in failed");
     }
@@ -216,12 +216,6 @@ export default function Landing() {
             </button>
           </p>
 
-          <p className="text-neutral-400 text-sm text-center">
-            Checking in as a senior?{" "}
-            <Link href="/checkin" className="text-white hover:underline underline-offset-4">
-              Start here
-            </Link>
-          </p>
         </div>
       </section>
     </main>

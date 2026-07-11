@@ -79,15 +79,22 @@ export async function signUpWithPassword(email: string, password: string): Promi
   return true;
 }
 
-export async function signInWithGoogle(): Promise<void> {
+/**
+ * Returns true when the sign-in was handled locally (demo mode) and the caller
+ * should navigate; false when a real OAuth redirect has been started.
+ */
+export async function signInWithGoogle(): Promise<boolean> {
   if (!supabase) {
-    throw new Error("Google sign-in requires Supabase keys in .env.local (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY).");
+    // Demo mode: simulate the Google sign-in so the button works offline.
+    setDemoSession(DEMO_EMAIL);
+    return true;
   }
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: { redirectTo: `${window.location.origin}/globe` },
   });
   if (error) throw new Error(error.message);
+  return false;
 }
 
 export async function getSessionEmail(): Promise<string | null> {
