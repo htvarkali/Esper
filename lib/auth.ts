@@ -79,11 +79,72 @@ export async function signUpWithPassword(email: string, password: string): Promi
   return true;
 }
 
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+export const isGoogleConfigured = Boolean(googleClientId);
+
+interface GsiId {
+  initialize: (config: object) => void;
+  prompt: (cb?: (notification: {
+    isNotDisplayed?: () => boolean;
+    isSkippedMoment?: () => boolean;
+  }) => void) => void;
+}
+
+function loadGoogleIdentity(): Promise<GsiId> {
+  return new Promise((resolve, reject) => {
+    const w = window as unknown as { google?: { accounts?: { id?: GsiId } } };
+    if (w.google?.accounts?.id) return resolve(w.google.accounts.id);
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.onload = () => {
+      const id = (window as unknown as { google?: { accounts?: { id?: GsiId } } }).google
+        ?.accounts?.id;
+      id ? resolve(id) : reject(new Error("Google sign-in script did not initialize."));
+    };
+    script.onerror = () => reject(new Error("Could not load the Google sign-in script (offline?)."));
+    document.head.appendChild(script);
+  });
+}
+
+/** Real Google sign-in via Google Identity Services. Needs NEXT_PUBLIC_GOOGLE_CLIENT_ID. */
+async function signInWithGoogleIdentity(): Promise<void> {
+  const gsi = await loadGoogleIdentity();
+  const credential = await new Promise<string>((resolve, reject) => {
+    gsi.initialize({
+      client_id: googleClientId,
+      callback: (response: { credential?: string }) =>
+        response?.credential
+          ? resolve(response.credential)
+          : reject(new Error("Google sign-in was cancelled.")),
+      use_fedcm_for_prompt: true,
+    });
+    gsi.prompt((notification) => {
+      if (notification?.isNotDisplayed?.() || notification?.isSkippedMoment?.()) {
+        reject(
+          new Error(
+            "The Google prompt did not open. Check that this origin is listed under Authorized JavaScript origins for the client ID, and that third-party sign-in is allowed."
+          )
+        );
+      }
+    });
+  });
+  const payloadPart = credential.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+  const payload = JSON.parse(atob(payloadPart)) as { email?: string };
+  if (!payload.email) throw new Error("Google returned no email for this account.");
+  setDemoSession(payload.email.toLowerCase());
+}
+
 /**
- * Returns true when the sign-in was handled locally (demo mode) and the caller
- * should navigate; false when a real OAuth redirect has been started.
+ * Returns true when the sign-in completed locally (Google Identity or demo
+ * mode) and the caller should navigate; false when a Supabase OAuth redirect
+ * has been started.
  */
 export async function signInWithGoogle(): Promise<boolean> {
+  if (googleClientId) {
+    await signInWithGoogleIdentity();
+    return true;
+  }
   if (!supabase) {
     // Demo mode: simulate the Google sign-in so the button works offline.
     setDemoSession(DEMO_EMAIL);
@@ -98,22 +159,23 @@ export async function signInWithGoogle(): Promise<boolean> {
 }
 
 export async function getSessionEmail(): Promise<string | null> {
+  // Local session first: used by demo mode and Google Identity sign-in.
+  try {
+    const raw = localStorage.getItem(DEMO_SESSION_KEY);
+    if (raw) return JSON.parse(raw).email as string;
+  } catch {
+    // fall through to Supabase
+  }
   if (supabase) {
     const { data } = await supabase.auth.getSession();
     return data.session?.user?.email ?? null;
   }
-  try {
-    const raw = localStorage.getItem(DEMO_SESSION_KEY);
-    return raw ? (JSON.parse(raw).email as string) : null;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 export async function signOut(): Promise<void> {
+  localStorage.removeItem(DEMO_SESSION_KEY);
   if (supabase) {
     await supabase.auth.signOut();
-    return;
   }
-  localStorage.removeItem(DEMO_SESSION_KEY);
 }
