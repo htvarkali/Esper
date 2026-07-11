@@ -3,7 +3,7 @@ import { patients, statusColor } from "../data/patients";
 
 export default function CheckinCodesPanel() {
   return (
-    <div className="bg-gray-alpha-100 rounded-md p-4 md:p-6 space-y-4">
+    <div className="bg-gray-alpha-100 backdrop-blur-md border border-gray-alpha-200 rounded-md p-4 md:p-6 space-y-4">
       <div className="space-y-1">
         <h2 className="my-0 font-mono font-medium text-sm tracking-tight uppercase text-gray-1000">
           Patient check-in codes

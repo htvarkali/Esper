@@ -210,7 +210,9 @@ function StatCard({
   );
 
   return (
-    <div className={`relative group rounded-md overflow-hidden ${className || ""}`}>
+    <div
+      className={`relative group rounded-md overflow-hidden border border-gray-alpha-200 backdrop-blur-md ${className || ""}`}
+    >
       <PixelGridTransition
         firstContent={statsContent}
         secondContent={infoContentView}

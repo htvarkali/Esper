@@ -21,28 +21,30 @@ const QUESTIONS: Question[] = [
     ],
   },
   {
-    key: "medications",
-    text: "Did you take your medications today?",
-    options: [
-      { label: "Yes", emoji: "✅" },
-      { label: "Not yet", emoji: "🕐" },
-    ],
-  },
-  {
     key: "sleep",
     text: "How did you sleep last night?",
     options: [
-      { label: "Well", emoji: "😴" },
-      { label: "Okay", emoji: "🙂" },
+      { label: "Slept well", emoji: "😴" },
+      { label: "So-so", emoji: "😐" },
       { label: "Poorly", emoji: "😫" },
     ],
   },
   {
-    key: "meals",
-    text: "Have you eaten today?",
+    key: "medications",
+    text: "Have you taken today's medications?",
     options: [
-      { label: "Yes", emoji: "🍽️" },
+      { label: "Yes, all of them", emoji: "✅" },
+      { label: "Some of them", emoji: "💊" },
       { label: "Not yet", emoji: "🕐" },
+    ],
+  },
+  {
+    key: "meals",
+    text: "How many meals have you had today?",
+    options: [
+      { label: "Two or more", emoji: "🍽️" },
+      { label: "Just one", emoji: "🥣" },
+      { label: "Nothing yet", emoji: "🕐" },
     ],
   },
   {
@@ -52,6 +54,23 @@ const QUESTIONS: Question[] = [
       { label: "No pain", emoji: "😌" },
       { label: "A little", emoji: "😕" },
       { label: "A lot", emoji: "😖" },
+    ],
+  },
+  {
+    key: "activity",
+    text: "Have you been up and moving today?",
+    options: [
+      { label: "Yes, I got moving", emoji: "🚶" },
+      { label: "A little", emoji: "🧘" },
+      { label: "Not yet", emoji: "🛋️" },
+    ],
+  },
+  {
+    key: "social",
+    text: "Have you talked with anyone today?",
+    options: [
+      { label: "Yes", emoji: "💬" },
+      { label: "Not yet", emoji: "📞" },
     ],
   },
 ];
@@ -118,12 +137,27 @@ export default function CheckinPage() {
     setStep("done");
   };
 
+  const bigButtonClass =
+    "flex items-center justify-center gap-4 text-3xl font-semibold bg-white text-[#241f1a] border-4 border-white/50 hover:border-emerald-400 hover:bg-emerald-50 rounded-2xl py-6 px-8 cursor-pointer transition-colors";
+
   return (
-    <main className="min-h-screen bg-[#faf6ef] text-[#241f1a] font-sans flex flex-col">
+    <main className="min-h-screen relative text-white font-sans flex flex-col">
+      <div className="fixed inset-0 -z-10 bg-black" aria-hidden>
+        <video
+          src="/hero.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover opacity-50 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-black/45" />
+      </div>
+
       <header className="px-6 pt-8 pb-4 max-w-2xl w-full mx-auto flex items-center justify-between">
-        <span className="font-mono uppercase tracking-widest text-lg text-[#8a7f72]">Esper</span>
+        <span className="font-mono uppercase tracking-widest text-lg text-white/70">Esper</span>
         {typeof step === "number" && (
-          <span className="text-xl text-[#8a7f72]">
+          <span className="text-xl text-white/80">
             Question {step + 1} of {QUESTIONS.length}
           </span>
         )}
@@ -135,7 +169,7 @@ export default function CheckinPage() {
             <form onSubmit={submitCode} className="space-y-8 text-center">
               <div className="space-y-3">
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight">Hello! 👋</h1>
-                <p className="text-2xl text-[#5c5347] leading-relaxed">
+                <p className="text-2xl text-white/85 leading-relaxed">
                   Please type your 4-character code.
                   <br />
                   Your care team gave it to you.
@@ -148,10 +182,10 @@ export default function CheckinPage() {
                 inputMode="text"
                 autoComplete="off"
                 aria-label="Your 4-character check-in code"
-                className="w-64 text-center text-6xl font-mono tracking-[0.35em] uppercase bg-white border-4 border-[#d8cbb8] focus:border-[#2f6f4f] rounded-2xl py-5 outline-none"
+                className="w-64 text-center text-6xl font-mono tracking-[0.35em] uppercase bg-white text-[#241f1a] border-4 border-white/50 focus:border-emerald-400 rounded-2xl py-5 outline-none"
                 placeholder="····"
               />
-              {codeError && <p className="text-2xl text-[#b3372c]">{codeError}</p>}
+              {codeError && <p className="text-2xl text-amber-300">{codeError}</p>}
               <div>
                 <button
                   type="submit"
@@ -161,7 +195,7 @@ export default function CheckinPage() {
                   Start
                 </button>
               </div>
-              <Link href="/" className="inline-block text-xl text-[#8a7f72] underline underline-offset-4">
+              <Link href="/" className="inline-block text-xl text-white/70 underline underline-offset-4">
                 Go back
               </Link>
             </form>
@@ -170,8 +204,8 @@ export default function CheckinPage() {
           {typeof step === "number" && patient && (
             <div className="space-y-10 text-center">
               {step === 0 && (
-                <p className="text-3xl text-[#5c5347]">
-                  Good to see you, <span className="font-bold text-[#241f1a]">{firstName}</span>!
+                <p className="text-3xl text-white/85">
+                  Good to see you, <span className="font-bold text-white">{firstName}</span>!
                 </p>
               )}
               <h1 className="text-4xl md:text-5xl font-bold leading-tight">
@@ -182,7 +216,7 @@ export default function CheckinPage() {
                   <button
                     key={option.label}
                     onClick={() => answer(QUESTIONS[step as number], option.label)}
-                    className="flex items-center justify-center gap-4 text-3xl font-semibold bg-white border-4 border-[#d8cbb8] hover:border-[#2f6f4f] hover:bg-[#f0faf4] rounded-2xl py-6 px-8 cursor-pointer transition-colors"
+                    className={bigButtonClass}
                   >
                     <span className="text-4xl">{option.emoji}</span>
                     {option.label}
@@ -202,7 +236,7 @@ export default function CheckinPage() {
                 onChange={(e) => setNote(e.target.value)}
                 rows={4}
                 placeholder="Type here (optional)"
-                className="w-full text-2xl bg-white border-4 border-[#d8cbb8] focus:border-[#2f6f4f] rounded-2xl p-6 outline-none resize-none"
+                className="w-full text-2xl bg-white text-[#241f1a] border-4 border-white/50 focus:border-emerald-400 rounded-2xl p-6 outline-none resize-none placeholder:text-[#241f1a]/40"
               />
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
@@ -213,7 +247,7 @@ export default function CheckinPage() {
                 </button>
                 <button
                   onClick={() => finish("")}
-                  className="text-2xl font-semibold bg-white border-4 border-[#d8cbb8] rounded-2xl px-10 py-6 cursor-pointer hover:border-[#8a7f72] transition-colors"
+                  className="text-2xl font-semibold bg-white text-[#241f1a] border-4 border-white/50 rounded-2xl px-10 py-6 cursor-pointer hover:border-emerald-400 transition-colors"
                 >
                   Skip
                 </button>
@@ -227,14 +261,14 @@ export default function CheckinPage() {
               <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                 Thank you, {firstName}!
               </h1>
-              <p className="text-2xl text-[#5c5347] leading-relaxed">
+              <p className="text-2xl text-white/85 leading-relaxed">
                 Your answers were sent to your care team.
                 <br />
                 Have a lovely day. 🌼
               </p>
               <Link
                 href="/"
-                className="inline-block text-2xl font-semibold bg-white border-4 border-[#d8cbb8] rounded-2xl px-10 py-5 hover:border-[#8a7f72] transition-colors"
+                className="inline-block text-2xl font-semibold bg-white text-[#241f1a] rounded-2xl px-10 py-5 hover:bg-emerald-50 transition-colors"
               >
                 Done
               </Link>

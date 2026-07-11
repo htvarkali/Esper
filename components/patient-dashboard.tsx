@@ -86,13 +86,15 @@ export function PatientDashboard({ patient }: { patient: Patient }) {
   return (
     <div className="h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950" />
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Fractal%20Glass%20-%204.jpg-8QPt1A02QgjJIeTqwEYV5thwZXXEGT.jpeg')`,
-        }}
+      <video
+        src="/hero.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none"
       />
-      <div className="bg-black/30 absolute inset-0" />
+      <div className="bg-black/40 absolute inset-0" />
 
       <div className="relative z-10 p-6 grid grid-cols-12 gap-6 h-screen">
         {/* Left Sidebar: patient identity */}
