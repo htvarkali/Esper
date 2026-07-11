@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signInWithPassword, signInWithGoogle } from "@/lib/auth";
+import { signInWithPassword, signUpWithPassword, signInWithGoogle } from "@/lib/auth";
 import { getPatientByCode } from "./data/patients";
 
 const STEPS = [
@@ -20,6 +20,8 @@ export default function Landing() {
   const [busy, setBusy] = useState(false);
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState<string | null>(null);
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [notice, setNotice] = useState<string | null>(null);
 
   const startCheckin = (event: React.FormEvent) => {
     event.preventDefault();
@@ -34,12 +36,23 @@ export default function Landing() {
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
-      await signInWithPassword(email, password);
+      if (mode === "signin") {
+        await signInWithPassword(email, password);
+      } else {
+        const signedIn = await signUpWithPassword(email, password);
+        if (!signedIn) {
+          setNotice("Account created. Check your email to confirm, then sign in.");
+          setMode("signin");
+          setBusy(false);
+          return;
+        }
+      }
       router.push("/globe");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Sign-in failed");
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setBusy(false);
     }
   };
@@ -123,8 +136,14 @@ export default function Landing() {
       <section className="lg:w-1/2 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-md space-y-6">
           <div className="space-y-2">
-            <h2 className="text-4xl font-bold">Organizer Sign In</h2>
-            <p className="text-neutral-400">Enter your details to open the care dashboard.</p>
+            <h2 className="text-4xl font-bold">
+              {mode === "signin" ? "Organizer Sign In" : "Organizer Sign Up"}
+            </h2>
+            <p className="text-neutral-400">
+              {mode === "signin"
+                ? "Enter your details to open the care dashboard."
+                : "Create your organizer account."}
+            </p>
           </div>
 
           <button
@@ -161,19 +180,41 @@ export default function Landing() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
+              placeholder={mode === "signin" ? "Your password" : "Create a password (8+ characters)"}
               aria-label="Password"
               className="w-full bg-neutral-900/70 border border-neutral-800 focus:border-neutral-500 rounded-xl px-4 py-3.5 outline-none placeholder:text-neutral-500"
             />
             {error && <p className="text-red-400 text-sm leading-snug">{error}</p>}
+            {notice && <p className="text-emerald-400 text-sm leading-snug">{notice}</p>}
             <button
               type="submit"
               disabled={busy}
               className="w-full bg-white text-black font-semibold rounded-xl py-3.5 hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              {busy ? "Signing in..." : "Sign In"}
+              {busy
+                ? mode === "signin"
+                  ? "Signing in..."
+                  : "Creating account..."
+                : mode === "signin"
+                  ? "Sign In"
+                  : "Sign Up"}
             </button>
           </form>
+
+          <p className="text-neutral-400 text-sm text-center">
+            {mode === "signin" ? "Don't have an account?" : "Already have an account?"}{" "}
+            <button
+              type="button"
+              onClick={() => {
+                setMode(mode === "signin" ? "signup" : "signin");
+                setError(null);
+                setNotice(null);
+              }}
+              className="text-white hover:underline underline-offset-4 cursor-pointer bg-transparent border-none p-0 font-semibold"
+            >
+              {mode === "signin" ? "Sign up" : "Sign in"}
+            </button>
+          </p>
 
           <p className="text-neutral-400 text-sm text-center">
             Checking in as a senior?{" "}

@@ -32,6 +32,19 @@ export const DEMO_EMAIL = "demo@esper.care";
 export const DEMO_PASSWORD = "esper2026";
 
 const DEMO_SESSION_KEY = "esper-organizer-session";
+const DEMO_ACCOUNTS_KEY = "esper-demo-accounts";
+
+function demoAccounts(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem(DEMO_ACCOUNTS_KEY) ?? "{}");
+  } catch {
+    return {};
+  }
+}
+
+function setDemoSession(email: string): void {
+  localStorage.setItem(DEMO_SESSION_KEY, JSON.stringify({ email, at: Date.now() }));
+}
 
 export async function signInWithPassword(email: string, password: string): Promise<void> {
   if (supabase) {
@@ -39,11 +52,31 @@ export async function signInWithPassword(email: string, password: string): Promi
     if (error) throw new Error(error.message);
     return;
   }
-  if (email.trim().toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) {
-    localStorage.setItem(DEMO_SESSION_KEY, JSON.stringify({ email: DEMO_EMAIL, at: Date.now() }));
+  const key = email.trim().toLowerCase();
+  if ((key === DEMO_EMAIL && password === DEMO_PASSWORD) || demoAccounts()[key] === password) {
+    setDemoSession(key);
     return;
   }
-  throw new Error(`Invalid credentials. Demo login: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
+  throw new Error("Invalid email or password.");
+}
+
+/** Returns true if the user is signed in right away, false if email confirmation is pending. */
+export async function signUpWithPassword(email: string, password: string): Promise<boolean> {
+  if (password.length < 8) throw new Error("Password must be at least 8 characters.");
+  if (supabase) {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw new Error(error.message);
+    return data.session !== null;
+  }
+  const key = email.trim().toLowerCase();
+  const accounts = demoAccounts();
+  if (key === DEMO_EMAIL || accounts[key]) {
+    throw new Error("An account with this email already exists. Sign in instead.");
+  }
+  accounts[key] = password;
+  localStorage.setItem(DEMO_ACCOUNTS_KEY, JSON.stringify(accounts));
+  setDemoSession(key);
+  return true;
 }
 
 export async function signInWithGoogle(): Promise<void> {
