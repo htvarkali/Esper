@@ -7,6 +7,7 @@ import {
   StatusLegend,
 } from "../components/StatsDisplay";
 import CheckinCodesPanel from "../components/CheckinCodesPanel";
+import CodeBadge from "../components/CodeBadge";
 import AuthGuard from "@/components/auth-guard";
 
 export default function GlobePage() {
@@ -29,6 +30,7 @@ export default function GlobePage() {
               >
                 Command Center ↗
               </a>
+              <CodeBadge />
             </header>
 
             <section className="pb-6 w-full">
@@ -59,6 +61,7 @@ export default function GlobePage() {
               >
                 Command Center ↗
               </a>
+              <CodeBadge />
             </header>
 
             <section className="lg:absolute lg:bottom-0 pb-6 w-fit z-10 relative mt-32">
