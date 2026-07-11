@@ -23,6 +23,12 @@ export default function GlobePage() {
                 </span>
               </p>
               <StatusLegend />
+              <a
+                href="http://localhost:3001/dashboard"
+                className="text-gray-1000 text-xs uppercase hover:underline underline-offset-2"
+              >
+                Command Center ↗
+              </a>
             </header>
 
             <section className="pb-6 w-full">
@@ -47,6 +53,12 @@ export default function GlobePage() {
                 </span>
               </p>
               <StatusLegend />
+              <a
+                href="http://localhost:3001/dashboard"
+                className="text-gray-1000 text-xs uppercase hover:underline underline-offset-2"
+              >
+                Command Center ↗
+              </a>
             </header>
 
             <section className="lg:absolute lg:bottom-0 pb-6 w-fit z-10 relative mt-32">
