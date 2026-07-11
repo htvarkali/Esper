@@ -1,33 +1,54 @@
-# terra-landing-page
+# SilverGuard
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+SilverGuard is an early-warning system for seniors who live alone. A senior completes a twenty-second daily check-in, and the system looks for missed check-ins and gradual changes in sleep, meals, mood, timing, and engagement. The goal is simple: catch the decline while it is still a phone call, before it becomes an ambulance.
 
-## Built with v0
+## How it works
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+- **Tier 1 — the bad day:** a missed personal check-in deadline triggers a neighborhood buddy response, followed by coordinator and emergency-contact escalation when needed.
+- **Tier 2 — the bad month:** deterministic health and isolation scores compare recent behavior with the senior's own lagging baseline.
+- **Coordinator support:** ranked alerts explain what changed, state their confidence, suggest an action, and provide an offline outreach brief.
+- **Privacy by design:** seniors choose their buddy and emergency contacts, and the system is designed to keep data local to the senior center.
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_cdBHXP6ElJ1rdCultVyqvtQqHuy9)
+Detection is deterministic and traceable. The language layer explains results after the scoring engine has made its decision.
 
-## Getting Started
+## Repository structure
 
-First, run the development server:
+```text
+app/         Next.js landing page
+components/  Shared interface components
+public/      Site assets
+backend/     Offline scoring engine, simulated personas, demo, and tests
+```
+
+## Run the website
+
+Requirements: Node.js 18+ and pnpm.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a production build with:
 
-## Learn More
+```bash
+pnpm build
+```
 
-To learn more, take a look at the following resources:
+## Run the engine
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+The backend is framework-free, uses ES modules, and has no runtime dependencies.
+
+```bash
+cd backend
+npm test
+npm run demo
+```
+
+The test suite covers the missed-check-in rule, escalation ladder, lagging baseline, trend scoring, confidence, projection, replay, coordinator actions, serialization, and simulated senior personas.
+
+## Product principle
+
+> Catch the decline while it is still a phone call, before it becomes an ambulance.

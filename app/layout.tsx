@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   title: "SilverGuard — Early Warning for Seniors Living Alone",
   description:
     "A twenty-second daily check-in helps senior centers catch quiet decline while it is still a phone call, before it becomes an ambulance.",
-  generator: "v0.app",
+  applicationName: "SilverGuard",
+  creator: "SilverGuard",
   icons: {
     icon: [
       {
